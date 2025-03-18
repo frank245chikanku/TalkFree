@@ -6,6 +6,7 @@ import { json, urlencoded } from 'body-parser'
 import mongoose from 'mongoose'
 import express from 'express'  
 import cors from  'cors'
+import cookieSession from 'cookie-session';  
 
 import { newPostRouter, deletepostRouter, updatedPostRouter, showpostRouter, newCommentRouter, deleteCommentRouter } from './routers';
 
@@ -21,10 +22,18 @@ app.use(cors(
 
 ))
 
+app.set('trust proxy', true); 
+
 app.use(urlencoded({
-    extended: true
+    extended: false
 })) 
-app.use( json())    
+app.use( json())   
+app.use(cookieSession({ 
+    signed: false,  
+    secure: false,  
+
+}))
+
 app.use(newPostRouter)
 app.use(deletepostRouter)  
 app.use(updatedPostRouter)   
@@ -46,10 +55,15 @@ declare global {
 }
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
     res.status(500).json({ message: error.message });
+
+    res.status(500).json({ message: 'something went wrong'})
 });
 
 const start =  async () => {
-    if(!process.env.MONGO_URI)throw new Error('MONGO_URI is required!')  
+    if(!process.env.MONGO_URI)throw new Error('MONGO_URI is required!') 
+
+    if(!process.env.JWT_KEY)throw new Error('JWT_KEY is required!')  
+        
         try{
        await mongoose.connect(process.env.MONGO_URI)
     }  catch(err) {
