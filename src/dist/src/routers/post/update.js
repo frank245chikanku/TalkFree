@@ -42,6 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updatedPostRouter = void 0;
 var express_1 = require("express");
 var post_1 = __importDefault(require("../../models/post"));
+var src_1 = require("../../../common /src");
 var router = (0, express_1.Router)();
 exports.updatedPostRouter = router;
 router.post('/api/post/update/:id', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
@@ -52,9 +53,7 @@ router.post('/api/post/update/:id', function (req, res, next) { return __awaiter
                 id = req.params.id;
                 _a = req.body, content = _a.content, title = _a.title;
                 if (!id) {
-                    error = new Error('Post ID is required');
-                    error.status = 400;
-                    return [2 /*return*/, next(error)];
+                    error = new src_1.BadRequestError('Post ID is required');
                 }
                 _b.label = 1;
             case 1:
@@ -63,17 +62,13 @@ router.post('/api/post/update/:id', function (req, res, next) { return __awaiter
             case 2:
                 updatedPost = _b.sent();
                 if (!updatedPost) {
-                    error = new Error('Post not found');
-                    error.status = 404;
-                    return [2 /*return*/, next(error)];
+                    error = new src_1.BadRequestError('Post not found');
                 }
                 res.status(200).send(updatedPost);
                 return [3 /*break*/, 4];
             case 3:
                 err_1 = _b.sent();
-                error = new Error('Post cannot be updated');
-                error.status = 400;
-                next(error);
+                error = new src_1.BadRequestError('Post cannot be updated');
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }

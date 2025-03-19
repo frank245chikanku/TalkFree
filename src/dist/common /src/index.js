@@ -16,3 +16,10 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./services/authentication"), exports);
 __exportStar(require("../src/middlewares/current-user"), exports);
+__exportStar(require("../src/middlewares/require-auth"), exports);
+__exportStar(require("../src/middlewares/error-handler"), exports);
+__exportStar(require("./errors/bad-request-error"), exports);
+__exportStar(require("./errors/custom-error"), exports);
+__exportStar(require("./errors/database-connection-error"), exports);
+__exportStar(require("./errors/not-authorized-error"), exports);
+__exportStar(require("./errors/not-found-error"), exports);

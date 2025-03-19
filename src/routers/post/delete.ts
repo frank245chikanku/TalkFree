@@ -1,5 +1,6 @@
 import { Router, Response, Request, NextFunction } from 'express'   
-import post from '../../models/post'   
+import post from '../../models/post'  
+import  { BadRequestError } from '../../../common /src'
 
 const router = Router()  
 
@@ -7,9 +8,8 @@ router.delete('/api/post/delete/:id', async (req: Request, res: Response, next: 
     const { id } = req.params;
 
     if (!id) {
-        const error = new Error('post id is required!') as CustomError; 
-        error.status = 400; 
-        next(error)
+        const error = new BadRequestError('post id is required!') 
+        
     }
     try {
         await post.findOneAndDelete({_id: id })

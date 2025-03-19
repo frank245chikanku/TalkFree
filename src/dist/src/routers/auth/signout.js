@@ -35,40 +35,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.signupRouter = void 0;
+exports.signoutRouter = void 0;
 var express_1 = require("express");
-var user_1 = require("../../models/user");
-var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-var src_1 = require("../../../common /src");
 var router = (0, express_1.Router)();
-exports.signupRouter = router;
-router.post('/signup', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, email, password, user, newUser;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
-            case 0:
-                _a = req.body, email = _a.email, password = _a.password;
-                return [4 /*yield*/, user_1.User.findOne({ email: email })];
-            case 1:
-                user = _b.sent();
-                if (user)
-                    return [2 /*return*/, next(new src_1.BadRequestError('user with the same email already exits'))];
-                newUser = new user_1.User({
-                    email: email,
-                    password: password
-                });
-                return [4 /*yield*/, newUser.save()];
-            case 2:
-                _b.sent();
-                req.session = {
-                    jwt: jsonwebtoken_1.default.sign({ email: email, userId: newUser._id }, process.env.JWT_KEY)
-                };
-                res.status(201).send(newUser);
-                return [2 /*return*/];
-        }
+exports.signoutRouter = router;
+router.post('/signout', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        req.session = null;
+        res.send({});
+        return [2 /*return*/];
     });
 }); });

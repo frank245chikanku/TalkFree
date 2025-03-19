@@ -42,6 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deletepostRouter = void 0;
 var express_1 = require("express");
 var post_1 = __importDefault(require("../../models/post"));
+var src_1 = require("../../../common /src");
 var router = (0, express_1.Router)();
 exports.deletepostRouter = router;
 router.delete('/api/post/delete/:id', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
@@ -51,9 +52,7 @@ router.delete('/api/post/delete/:id', function (req, res, next) { return __await
             case 0:
                 id = req.params.id;
                 if (!id) {
-                    error = new Error('post id is required!');
-                    error.status = 400;
-                    next(error);
+                    error = new src_1.BadRequestError('post id is required!');
                 }
                 _a.label = 1;
             case 1:

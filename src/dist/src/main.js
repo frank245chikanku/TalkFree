@@ -80,6 +80,7 @@ var express_1 = __importDefault(require("express"));
 var cors_1 = __importDefault(require("cors"));
 var cookie_session_1 = __importDefault(require("cookie-session"));
 var routers_1 = require("./routers");
+var src_1 = require("../common /src");
 var app = (0, express_1.default)();
 app.use((0, cors_1.default)({
     origin: "*",
@@ -94,12 +95,13 @@ app.use((0, cookie_session_1.default)({
     signed: false,
     secure: false,
 }));
-app.use(routers_1.newPostRouter);
-app.use(routers_1.deletepostRouter);
-app.use(routers_1.updatedPostRouter);
+app.use(src_1.currentUser);
+app.use(src_1.requireAuth, routers_1.newPostRouter);
+app.use(src_1.requireAuth, routers_1.deletepostRouter);
+app.use(src_1.requireAuth, routers_1.updatedPostRouter);
 app.use(routers_1.showpostRouter);
-app.use(routers_1.newCommentRouter);
-app.use(routers_1.deleteCommentRouter);
+app.use(src_1.requireAuth, routers_1.newCommentRouter);
+app.use(src_1.requireAuth, routers_1.deleteCommentRouter);
 app.all('*', function (req, res, next) {
     var error = new Error('not found!');
     error.status = 404;

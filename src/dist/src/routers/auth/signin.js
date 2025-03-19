@@ -56,12 +56,12 @@ router.post('/signup', function (req, res, next) { return __awaiter(void 0, void
             case 1:
                 user = _b.sent();
                 if (!user)
-                    return [2 /*return*/, next(new Error('wrong credentials'))];
+                    return [2 /*return*/, next(new src_1.BadRequestError('wrong credentials'))];
                 return [4 /*yield*/, src_1.authenticationService.pwdCompare(user.password, password)];
             case 2:
                 isEqual = _b.sent();
                 if (!isEqual)
-                    return [2 /*return*/, next(new Error('wrong credentials'))];
+                    return [2 /*return*/, next(new src_1.BadRequestError('wrong credentials'))];
                 token = jsonwebtoken_1.default.sign({ email: email, userId: user._id }, process.env.JWT_KEY);
                 req.session = { jwt: token };
                 res.status(200).send(user);

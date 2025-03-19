@@ -7,4 +7,4 @@ router.get('/current-user', currentUser, async (req: Request, res: Response, nex
     res.status(200).send({ currentUser: req.currentUser })
 })
 
-export { router as currentUserRouter}
+export { router as currentUserRouter}   

@@ -43,6 +43,7 @@ exports.deleteCommentRouter = void 0;
 var express_1 = require("express");
 var post_1 = __importDefault(require("../../models/post"));
 var comment_1 = __importDefault(require("../../models/comment"));
+var src_1 = require("../../../common /src");
 var router = (0, express_1.Router)();
 exports.deleteCommentRouter = router;
 router.delete('/api/comment/:commentId/delete/:postId', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
@@ -53,8 +54,6 @@ router.delete('/api/comment/:commentId/delete/:postId', function (req, res, next
                 _a = req.params, postId = _a.postId, commentId = _a.commentId;
                 if (!commentId || !postId) {
                     error = new Error('post id and comment id are required!');
-                    error.status = 400;
-                    next(error);
                 }
                 _b.label = 1;
             case 1:
@@ -65,7 +64,7 @@ router.delete('/api/comment/:commentId/delete/:postId', function (req, res, next
                 return [3 /*break*/, 4];
             case 3:
                 err_1 = _b.sent();
-                next(new Error('comment cannot be updated'));
+                next(new src_1.BadRequestError('comment cannot be updated'));
                 return [3 /*break*/, 4];
             case 4: return [4 /*yield*/, post_1.default.findByIdAndUpdate({ _id: postId }, { $pull: { comments: commentId } })];
             case 5:
