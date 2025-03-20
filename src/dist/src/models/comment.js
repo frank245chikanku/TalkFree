@@ -13,5 +13,6 @@ var commentSchema = new mongoose_1.default.Schema({
         required: true
     }
 });
+commentSchema.statics.build = function (createCommentDto) { return new Comment(createCommentDto); };
 var Comment = mongoose_1.default.model('Comment', commentSchema);
 exports.default = Comment;

@@ -20,5 +20,6 @@ var postSchema = new mongoose_1.default.Schema({
         }
     ]
 });
-var Post = mongoose_1.default.model("Post", postSchema);
-exports.default = Post;
+postSchema.statics.build = function (createpostDto) { return new post(createpostDto); };
+var post = mongoose_1.default.model('post', postSchema);
+exports.default = post;

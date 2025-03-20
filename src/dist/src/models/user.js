@@ -64,10 +64,13 @@ userSchema.pre('save', function (done) {
         return __generator(this, function (_a) {
             if (this.isModified('password') || this.isNew) {
                 hashedPwd = src_1.authenticationService.pwdToHash(this.get('password'));
+                this.set('password', hashedPwd);
             }
             done();
             return [2 /*return*/];
         });
     });
 });
+userSchema.statics.build = function (createUserDto) {
+};
 exports.User = mongoose_1.default.model('User', userSchema);

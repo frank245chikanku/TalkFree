@@ -1,6 +1,22 @@
-import mongoose from "mongoose"; 
+import mongoose from "mongoose";  
+import { UserModel } from "./user";
 
-const commentSchema = new mongoose.Schema({
+export  interface CommentDoc extends mongoose.Document {
+    userName: string,  
+    content: string
+}
+
+export interface CreateCommentDto {      
+     UserName: string,  
+     content: string, 
+}
+
+export interface CommentModel extends mongoose.Model<CommentDoc> {
+    build(dto: CreateCommentDto ) : CommentDoc    
+}
+
+
+const commentSchema = new mongoose.Schema({            
     userName: {
         type: String,
         
@@ -11,6 +27,20 @@ const commentSchema = new mongoose.Schema({
     }
 });
 
-const Comment = mongoose.model('Comment', commentSchema)
+commentSchema.statics.build = (createCommentDto: CreateCommentDto ) => new Comment(createCommentDto)
 
-export default Comment; 
+ 
+const Comment = mongoose.model<CommentDoc, CommentModel>('Comment', commentSchema)
+
+
+export default Comment;      
+
+
+
+
+
+
+
+  
+
+

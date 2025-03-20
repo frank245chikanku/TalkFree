@@ -57,7 +57,7 @@ router.post('/signup', function (req, res, next) { return __awaiter(void 0, void
                 user = _b.sent();
                 if (user)
                     return [2 /*return*/, next(new src_1.BadRequestError('user with the same email already exits'))];
-                newUser = new user_1.User({
+                newUser = user_1.User.build({
                     email: email,
                     password: password
                 });
