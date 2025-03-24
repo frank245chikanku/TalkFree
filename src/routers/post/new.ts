@@ -1,30 +1,56 @@
 import { Router, Request, Response, NextFunction } from "express";
 import Post from "../../models/post";
+import { User } from  '../../models/user'
+import { BadRequestError, uploadImages } from "../../../common /src"; 
+import fs from 'fs'; 
+import path from 'path'  
 
-interface CustomError extends Error {
-    status?: number;
-}
+
 
 const router = Router();
 
-router.post("/api/post/new", async (req: Request, res: Response, next: NextFunction) => {
-    try {
+router.post("/api/post/new", uploadImages, async (req: Request, res: Response, next: NextFunction) => {
+    
         const { title, content } = req.body;
 
-        if (!title || !content) {
-            const error = new Error("Title and content are required!") as CustomError;
-            error.status = 400;
-            return next(error);
+        if(!req.files) return next(new BadRequestError('images are required'))
+
+        let images: Array<Express.Multer.File>   
+         
+        if(typeof req.files === 'object'){
+          images = Object .values(req.files)
+        } else {
+            images = req.files ? [...req.files] : [] 
         }
 
-        const newPost = new Post({ title, content });
 
-        await newPost.save();
+        if (!title || !content) {
+            const error = new BadRequestError("Title and content are required!") 
+            
+        }
 
-        res.status(201).json(newPost);
-    } catch (error) {
-        next(error);
-    }
-});
+        
+        const newPost = Post.build({
+            title,
+            content, 
+            images: images.map((file: Express.Multer.File) => {
 
-export { router as newPostRouter };
+            let srcObj = { src: `data:${file.mimetype};base64,${file.buffer.toString('base64')}`}
+            fs.unlink(path.join('upload/' + file.filename), () => {}) 
+            return srcObj
+
+        })
+     
+        });
+
+        await newPost.save()
+
+        await User.findOneAndUpdate({_id: req.currentUser!.userId },
+            { $push:{ posts: newPost._id } })
+
+        res.status(201).send(newPost)
+    
+
+    })
+
+export { router as newPostRouter }

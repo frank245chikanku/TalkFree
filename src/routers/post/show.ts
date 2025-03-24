@@ -19,7 +19,7 @@ router.get('/api/post/show/:id?', (req, res, next) => {
                 return res.status(404).json({ message: "Post not found" });
             }
 
-            return res.status(200).json({ post });
+            return res.status(200).json({ post });  
 
         } catch (error) {
             next(error);

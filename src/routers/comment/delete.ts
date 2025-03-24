@@ -15,12 +15,14 @@ router.delete('/api/comment/:commentId/delete/:postId', async (req: Request, res
     try {
         await Comment.findByIdAndDelete({_id: commentId })
     } catch(err) {
-        next(new BadRequestError ('comment cannot be updated'))
+        next(new BadRequestError ('comment cannot be updated!'))
     }
 
-    await post.findByIdAndUpdate({_id: postId }, {$pull: {comments: commentId }}) 
+    const Post = await post.findOneAndUpdate({_id: postId }, {$pull: {comments: commentId } }, { new: true })
+        
+        if(!post) return next(new Error())
 
-    res.status(200).json({ success: true })  
+    res.status(200).send(post)
 })   
 
 export { router as deleteCommentRouter}

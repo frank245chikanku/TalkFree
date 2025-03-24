@@ -43,22 +43,21 @@ exports.newCommentRouter = void 0;
 var express_1 = require("express");
 var comment_1 = __importDefault(require("../../models/comment"));
 var post_1 = __importDefault(require("../../models/post"));
+var src_1 = require("../../../common /src");
 var router = (0, express_1.Router)();
 exports.newCommentRouter = router;
 router.post('/api/comment/new/:postId', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, userName, content, postId, error, newComment, updatepost;
+    var _a, userName, content, postId, newComment, updatepost;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 _a = req.body, userName = _a.userName, content = _a.content;
                 postId = req.params.postId;
                 if (!content) {
-                    error = new Error('content is required!');
-                    error.status = 400;
-                    return [2 /*return*/, next(error)];
+                    return [2 /*return*/, next(new src_1.BadRequestError('content is required!'))];
                 }
-                newComment = new comment_1.default({
-                    userName: userName ? userName : 'anonymous',
+                newComment = comment_1.default.build({
+                    'UserName': userName ? userName : 'anonymous',
                     content: content
                 });
                 return [4 /*yield*/, newComment.save()];

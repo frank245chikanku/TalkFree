@@ -35,6 +35,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -42,31 +51,46 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.newPostRouter = void 0;
 var express_1 = require("express");
 var post_1 = __importDefault(require("../../models/post"));
+var user_1 = require("../../models/user");
+var src_1 = require("../../../common /src");
+var fs_1 = __importDefault(require("fs"));
+var path_1 = __importDefault(require("path"));
 var router = (0, express_1.Router)();
 exports.newPostRouter = router;
-router.post("/api/post/new", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, title, content, error, newPost, error_1;
+router.post("/api/post/new", src_1.uploadImages, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, title, content, images, error, newPost;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                _b.trys.push([0, 2, , 3]);
                 _a = req.body, title = _a.title, content = _a.content;
-                if (!title || !content) {
-                    error = new Error("Title and content are required!");
-                    error.status = 400;
-                    return [2 /*return*/, next(error)];
+                if (!req.files)
+                    return [2 /*return*/, next(new src_1.BadRequestError('images are required'))];
+                if (typeof req.files === 'object') {
+                    images = Object.values(req.files);
                 }
-                newPost = new post_1.default({ title: title, content: content });
+                else {
+                    images = req.files ? __spreadArray([], req.files, true) : [];
+                }
+                if (!title || !content) {
+                    error = new src_1.BadRequestError("Title and content are required!");
+                }
+                newPost = post_1.default.build({
+                    title: title,
+                    content: content,
+                    images: images.map(function (file) {
+                        var srcObj = { src: "data:".concat(file.mimetype, ";base64,").concat(file.buffer.toString('base64')) };
+                        fs_1.default.unlink(path_1.default.join('upload/' + file.filename), function () { });
+                        return srcObj;
+                    })
+                });
                 return [4 /*yield*/, newPost.save()];
             case 1:
                 _b.sent();
-                res.status(201).json(newPost);
-                return [3 /*break*/, 3];
+                return [4 /*yield*/, user_1.User.findOneAndUpdate({ _id: req.currentUser.userId }, { $push: { posts: newPost._id } })];
             case 2:
-                error_1 = _b.sent();
-                next(error_1);
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
+                _b.sent();
+                res.status(201).send(newPost);
+                return [2 /*return*/];
         }
     });
 }); });

@@ -2,6 +2,7 @@ export * from './services/authentication'
 export * from '../src/middlewares/current-user'
 export * from '../src/middlewares/require-auth'   
 export * from  '../src/middlewares/error-handler'
+export * from  '../src/middlewares/upload-img'
 
 export * from  './errors/bad-request-error'
 export * from  './errors/custom-error'

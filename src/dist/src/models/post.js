@@ -13,6 +13,9 @@ var postSchema = new mongoose_1.default.Schema({
         type: String,
         required: true
     },
+    images: [
+        { src: { type: String, required: true } }
+    ],
     comments: [
         {
             type: mongoose_1.default.Schema.Types.ObjectId,

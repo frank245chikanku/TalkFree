@@ -53,7 +53,7 @@ router.post('/api/post/update/:id', function (req, res, next) { return __awaiter
                 id = req.params.id;
                 _a = req.body, content = _a.content, title = _a.title;
                 if (!id) {
-                    error = new src_1.BadRequestError('Post ID is required');
+                    error = new src_1.BadRequestError('Post id is required');
                 }
                 _b.label = 1;
             case 1:

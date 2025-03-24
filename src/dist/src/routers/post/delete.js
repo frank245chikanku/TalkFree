@@ -42,11 +42,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deletepostRouter = void 0;
 var express_1 = require("express");
 var post_1 = __importDefault(require("../../models/post"));
+var user_1 = require("../../models/user");
 var src_1 = require("../../../common /src");
 var router = (0, express_1.Router)();
 exports.deletepostRouter = router;
 router.delete('/api/post/delete/:id', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var id, error, err_1;
+    var id, error, err_1, user;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -65,8 +66,12 @@ router.delete('/api/post/delete/:id', function (req, res, next) { return __await
                 err_1 = _a.sent();
                 next(new Error('post can not be updated!'));
                 return [3 /*break*/, 4];
-            case 4:
-                res.status(200).json({ success: true });
+            case 4: return [4 /*yield*/, user_1.User.findOneAndUpdate({ _id: req.currentUser.userId }, { $pull: { posts: id } }, { new: true })];
+            case 5:
+                user = _a.sent();
+                if (!user)
+                    return [2 /*return*/, next(new Error())];
+                res.status(200).send(user);
                 return [2 /*return*/];
         }
     });

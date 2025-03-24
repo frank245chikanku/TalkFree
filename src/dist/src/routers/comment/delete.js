@@ -47,7 +47,7 @@ var src_1 = require("../../../common /src");
 var router = (0, express_1.Router)();
 exports.deleteCommentRouter = router;
 router.delete('/api/comment/:commentId/delete/:postId', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, postId, commentId, error, err_1;
+    var _a, postId, commentId, error, err_1, Post;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -64,12 +64,14 @@ router.delete('/api/comment/:commentId/delete/:postId', function (req, res, next
                 return [3 /*break*/, 4];
             case 3:
                 err_1 = _b.sent();
-                next(new src_1.BadRequestError('comment cannot be updated'));
+                next(new src_1.BadRequestError('comment cannot be updated!'));
                 return [3 /*break*/, 4];
-            case 4: return [4 /*yield*/, post_1.default.findByIdAndUpdate({ _id: postId }, { $pull: { comments: commentId } })];
+            case 4: return [4 /*yield*/, post_1.default.findOneAndUpdate({ _id: postId }, { $pull: { comments: commentId } }, { new: true })];
             case 5:
-                _b.sent();
-                res.status(200).json({ success: true });
+                Post = _b.sent();
+                if (!post_1.default)
+                    return [2 /*return*/, next(new Error())];
+                res.status(200).send(post_1.default);
                 return [2 /*return*/];
         }
     });

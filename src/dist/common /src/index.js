@@ -18,6 +18,7 @@ __exportStar(require("./services/authentication"), exports);
 __exportStar(require("../src/middlewares/current-user"), exports);
 __exportStar(require("../src/middlewares/require-auth"), exports);
 __exportStar(require("../src/middlewares/error-handler"), exports);
+__exportStar(require("../src/middlewares/upload-img"), exports);
 __exportStar(require("./errors/bad-request-error"), exports);
 __exportStar(require("./errors/custom-error"), exports);
 __exportStar(require("./errors/database-connection-error"), exports);

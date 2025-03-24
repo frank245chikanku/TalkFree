@@ -9,7 +9,7 @@ router.post('/api/post/update/:id', async (req: Request, res: Response, next: Ne
     const { content, title } = req.body; 
 
     if (!id) {
-        const error = new BadRequestError('Post ID is required') 
+        const error = new BadRequestError('Post id is required') 
         
     }
 
