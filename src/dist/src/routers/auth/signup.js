@@ -44,9 +44,19 @@ var express_1 = require("express");
 var user_1 = require("../../models/user");
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var src_1 = require("../../../common /src");
+var express_validator_1 = require("express-validator");
 var router = (0, express_1.Router)();
 exports.signupRouter = router;
-router.post('/signup', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.post('/signup', [
+    (0, express_validator_1.body)('email')
+        .not().isEmpty()
+        .isEmail()
+        .withMessage('a valid email  is  required'),
+    (0, express_validator_1.body)('password')
+        .not().isEmpty()
+        .isLength({ min: 6 })
+        .withMessage('a valid password is required')
+], src_1.validationRequest, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, email, password, user, newUser;
     return __generator(this, function (_b) {
         switch (_b.label) {
@@ -59,7 +69,7 @@ router.post('/signup', function (req, res, next) { return __awaiter(void 0, void
                     return [2 /*return*/, next(new src_1.BadRequestError('user with the same email already exits'))];
                 newUser = user_1.User.build({
                     email: email,
-                    password: password
+                    password: password,
                 });
                 return [4 /*yield*/, newUser.save()];
             case 2:

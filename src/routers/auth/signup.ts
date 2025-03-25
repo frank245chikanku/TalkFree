@@ -1,21 +1,32 @@
 import { Router, Request, Response, NextFunction } from 'express';   
 import { User } from '../../models/user'
 import jwt from  'jsonwebtoken'  
-import { BadRequestError } from '../../../common /src';
+import { BadRequestError, validationRequest} from '../../../common /src';  
+import { body  }  from 'express-validator'
 
 const router = Router();
 
-router.post('/signup', async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    
-        const { email, password } = req.body;
+router.post('/signup', [
+  body('email')  
+  .not().isEmpty() 
+  .isEmail()
+  .withMessage('a valid email  is  required'), 
 
-        const user = await User.findOne({ email }); 
+   body('password')   
+  .not().isEmpty()  
+  .isLength({ min: 6}) 
+  .withMessage('a valid password is required')   
 
+
+ ], validationRequest , async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const { email, password } = req.body 
+    const user = await User.findOne({ email });    
+      
         if(user) return next (new BadRequestError('user with the same email already exits')) 
 
-            const newUser = User.build({
+            const newUser = User.build({        
                 email,
-                password
+                password,
             })
 
             await newUser.save()
